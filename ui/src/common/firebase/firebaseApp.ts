@@ -19,8 +19,15 @@ export const initFirebase = !getApps().length
   : getApp()
 
 export const appCheck = (arg: FirebaseApp): void => {
-  if (process.env.NEXT_PUBLIC_RECAPTCHA === undefined) return
-  if (typeof document === 'undefined') return
+  if (process.env.NODE_ENV === 'development') {
+    return
+  }
+  if (process.env.NEXT_PUBLIC_RECAPTCHA === undefined) {
+    return
+  }
+  if (typeof document === 'undefined') {
+    return
+  }
   initializeAppCheck(arg, {
     provider: new ReCaptchaV3Provider(process.env.NEXT_PUBLIC_RECAPTCHA),
     isTokenAutoRefreshEnabled: true
@@ -28,9 +35,9 @@ export const appCheck = (arg: FirebaseApp): void => {
 }
 
 export const db = (() => {
-  const res = getFirestore()
+  const res = getFirestore(initFirebase)
   if (process.env.NODE_ENV === 'development') {
-    connectFirestoreEmulator(res, 'localhost', 8080)
+    connectFirestoreEmulator(res, 'localhost', 8888)
   }
   return res
 })()
@@ -38,7 +45,7 @@ export const db = (() => {
 export const auth = (() => {
   const res = getAuth()
   if (process.env.NODE_ENV === 'development') {
-    connectAuthEmulator(res, 'http://localhost:9099')
+    connectAuthEmulator(res, 'http://localhost:9999')
   }
   return res
 })()
