@@ -10,7 +10,7 @@ import {
 } from '@mui/material'
 import useKeyboard from '../../../common/hooks/useKeyboard'
 import useLoading from '../../../common/hooks/useLoading'
-import GoogleButton from '../../ui-elements/button/GoogleButton'
+import GoogleButton from '../../ui-element/buttons/GoogleButton'
 import useLogIn from './useLoginForm'
 
 export const LoginForm = () => {
@@ -82,10 +82,9 @@ export const LoginForm = () => {
           </Link>
         </Grid>
       </Grid>
-      <GoogleButton
-        onClick={loginWithGoogle}
-        text="Googleアカウントでログイン"
-      />
+      <GoogleButton onClick={loginWithGoogle}>
+        Googleアカウントでログイン
+      </GoogleButton>
     </Box>
   )
 }

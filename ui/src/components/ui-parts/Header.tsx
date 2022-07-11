@@ -1,24 +1,14 @@
 import MenuIcon from '@mui/icons-material/Menu'
-import {
-  AppBar,
-  Box,
-  Grid,
-  IconButton,
-  TextField,
-  Toolbar
-} from '@mui/material'
+import { AppBar, Box, Grid, IconButton, Toolbar } from '@mui/material'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
-import { db } from '../../common/firebase/firebaseApp'
+import { useState } from 'react'
 import useDrawer from '../../common/hooks/useDrawer'
-import useKeyboard from '../../common/hooks/useKeyboard'
 import useSize from '../../common/hooks/useSize'
 import { AppLogo } from '../../common/static/images'
-import OutLinedButton from '../ui-elements/button/OutLinedButton'
-import TextButton from '../ui-elements/button/TextButton'
+import OutLinedButton from '../ui-element/buttons/OutLinedButton'
+import TextButton from '../ui-element/buttons/TextButton'
 
 const Header = () => {
   // init
@@ -26,11 +16,9 @@ const Header = () => {
   const { drawerWidth, openDrawer } = useDrawer()
   const router = useRouter()
   const { isMobileSize } = useSize()
-  const keyBoard = useKeyboard()
 
   // state
   const [isLogin, setIsLogin] = useState<boolean>(true)
-  const [url, setUrl] = useState<string>('')
 
   // effect
   onAuthStateChanged(auth, (user) => {
@@ -48,26 +36,16 @@ const Header = () => {
   const onClickSignUp = () => {
     router.push('/signup')
   }
-  const onSubmitUrl = async () => {
-    const docRef = await addDoc(collection(db, 'bookmark'), {
-      uid: auth.currentUser.uid ? 'auth.currentUser.uid' : 'user id === null',
-      url: 'https://brightdata.com/blog/how-tos/user-agents-for-web-scraping-101',
-      createdAt: serverTimestamp()
-    })
-    console.log(docRef)
-    // return docRef.id
-  }
 
   // 未ログインの場合
   const unregisteredUserMenu = (
     <Box>
-      <TextButton
-        text="ログイン"
-        size="small"
-        onClick={onClickLogin}
-        sx={{ marginRight: 1 }}
-      />
-      <OutLinedButton size="small" text="新規登録" onClick={onClickSignUp} />
+      <TextButton size="small" onClick={onClickLogin} sx={{ marginRight: 1 }}>
+        ログイン
+      </TextButton>
+      <OutLinedButton size="small" onClick={onClickSignUp}>
+        新規登録
+      </OutLinedButton>
     </Box>
   )
 
@@ -117,18 +95,6 @@ const Header = () => {
               src={AppLogo}
             />
           </Box>
-          <Box sx={{ flexGrow: 1, textAlign: 'center' }}>
-            <TextField
-              value={url}
-              id="url"
-              // label="https://hogehoge.com"
-              name="url"
-              type="url"
-              onChange={(event) => setUrl(event.target.value)}
-              onKeyPress={(event) => keyBoard.onPressEnter(onSubmitUrl, event)}
-            />
-          </Box>
-
           {isLogin === false && unregisteredUserMenu}
         </Toolbar>
       </Grid>

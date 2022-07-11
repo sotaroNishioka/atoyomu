@@ -3,8 +3,8 @@ import { Button } from '@mui/material'
 
 const GoogleButton: React.FC<{
   onClick: () => Promise<void>
-  text: string
-}> = ({ onClick, text }) => (
+  children: JSX.Element | string
+}> = ({ onClick, children }) => (
   <Button
     type="submit"
     fullWidth
@@ -21,7 +21,7 @@ const GoogleButton: React.FC<{
     onClick={onClick}
     startIcon={<Google />}
   >
-    {text}
+    {children}
   </Button>
 )
 

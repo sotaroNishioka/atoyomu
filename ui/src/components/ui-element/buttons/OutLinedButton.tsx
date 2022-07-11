@@ -3,16 +3,24 @@ import Typography from '@mui/material/Typography'
 import React from 'react'
 
 type Props = {
-  text: String
   size?: 'medium' | 'small' | 'large'
   onClick?: () => void
+  children: JSX.Element | string
 } & ButtonProps
 
-const TextButton: React.FC<Props> = React.memo(
-  ({ text, size = 'medium', onClick, ...buttonProps }) => {
+const OutLinedButton: React.FC<Props> = React.memo(
+  ({ children, size = 'medium', onClick, ...buttonProps }) => {
     const fontSize = 'caption'
     return (
-      <MuiButton onClick={onClick} variant="text" size={size} {...buttonProps}>
+      <MuiButton
+        onClick={onClick}
+        variant="outlined"
+        size={size}
+        sx={{
+          borderColor: 'secondary.main'
+        }}
+        {...buttonProps}
+      >
         <Typography
           variant={fontSize}
           sx={{
@@ -22,10 +30,10 @@ const TextButton: React.FC<Props> = React.memo(
             lineHeight: 'inherit'
           }}
         >
-          {text}
+          {children}
         </Typography>
       </MuiButton>
     )
   }
 )
-export default TextButton
+export default OutLinedButton

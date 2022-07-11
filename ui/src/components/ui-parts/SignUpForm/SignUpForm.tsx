@@ -1,8 +1,8 @@
 import { Email } from '@mui/icons-material'
 import { Box, Button, Grid, Link } from '@mui/material'
 import useLoading from '../../../common/hooks/useLoading'
-import GoogleButton from '../../ui-elements/button/GoogleButton'
-import SignUpEmailTextField from '../../ui-elements/SignUpEmailTextField'
+import GoogleButton from '../../ui-element/buttons/GoogleButton'
+import SignUpEmailTextField from '../../ui-element/SignUpEmailTextField'
 import useSignUp from './useSignUpForm'
 
 export const SignUpForm = () => {
@@ -42,7 +42,9 @@ export const SignUpForm = () => {
       >
         新規登録
       </Button>
-      <GoogleButton onClick={signUpWithGoogle} text="Googleアカウントで登録" />
+      <GoogleButton onClick={signUpWithGoogle}>
+        Googleアカウントで登録
+      </GoogleButton>
       {/* <FacebookSignUpButton onClick={signUpWithTwitter} />
       <TwitterSignUpButton onClick={signUpWithTwitter} /> */}
     </Box>
