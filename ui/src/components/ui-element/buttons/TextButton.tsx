@@ -1,31 +1,24 @@
-import MuiButton, { ButtonProps } from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
+import MuiButton from '@mui/material/Button'
+import { SxProps, Theme } from '@mui/material/styles'
 import React from 'react'
 
 type Props = {
   size?: 'medium' | 'small' | 'large'
   onClick?: () => void
-  children: JSX.Element | string
-} & ButtonProps
+  children: string
+  sx?: SxProps<Theme> | undefined
+}
 
 const TextButton: React.FC<Props> = React.memo(
-  ({ size = 'medium', onClick, children, ...buttonProps }) => {
-    const fontSize = 'caption'
-    return (
-      <MuiButton onClick={onClick} variant="text" size={size} {...buttonProps}>
-        <Typography
-          variant={fontSize}
-          sx={{
-            fontWeight: '600',
-            paddingRight: 1,
-            paddingLeft: 1,
-            lineHeight: 'inherit'
-          }}
-        >
-          {children}
-        </Typography>
-      </MuiButton>
-    )
-  }
+  ({ size = 'medium', onClick, children, sx }) => (
+    <MuiButton
+      onClick={onClick}
+      variant="text"
+      size={size}
+      sx={{ fontWeight: 700, pl: 2, pr: 2, ...sx }}
+    >
+      {children}
+    </MuiButton>
+  )
 )
 export default TextButton

@@ -1,9 +1,10 @@
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
-import React, { createContext, ReactElement, useMemo, useState } from 'react'
+import { createContext, ReactElement, useMemo, useState } from 'react'
 
 type AuthContextType = {
   user: User | null
   signOut: () => Promise<void>
+  isLogin: boolean
 }
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType)
@@ -21,7 +22,10 @@ const AuthProvider = ({ children }: { children: ReactElement<any, any> }) => {
     await auth.signOut()
   }
 
-  const val = useMemo(() => ({ user, signOut }), [auth])
+  const val = useMemo(
+    () => ({ user, signOut, isLogin: user !== null }),
+    [auth, user]
+  )
 
   return <AuthContext.Provider value={val}>{children}</AuthContext.Provider>
 }

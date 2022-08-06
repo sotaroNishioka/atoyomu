@@ -1,9 +1,8 @@
 import MenuIcon from '@mui/icons-material/Menu'
-import { AppBar, Box, Grid, IconButton, Toolbar } from '@mui/material'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { AppBar, Box, Container, IconButton, Toolbar } from '@mui/material'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import useAuth from '../../common/hooks/useAuth'
 import useDrawer from '../../common/hooks/useDrawer'
 import useSize from '../../common/hooks/useSize'
 import { AppLogo } from '../../common/static/images'
@@ -12,65 +11,74 @@ import TextButton from '../ui-element/buttons/TextButton'
 
 const Header = () => {
   // init
-  const auth = getAuth()
+  const { push } = useRouter()
   const { drawerWidth, openDrawer } = useDrawer()
-  const router = useRouter()
   const { isMobileSize } = useSize()
-
-  // state
-  const [isLogin, setIsLogin] = useState<boolean>(true)
-
-  // effect
-  onAuthStateChanged(auth, (user) => {
-    if (user === null) {
-      setIsLogin(false)
-      return
-    }
-    setIsLogin(true)
-  })
+  const { isLogin } = useAuth()
 
   // functions
   const onClickLogin = () => {
-    router.push('/login')
+    push('/login')
   }
   const onClickSignUp = () => {
-    router.push('/signup')
+    push('/signup')
   }
 
-  // 未ログインの場合
-  const unregisteredUserMenu = (
-    <Box>
-      <TextButton size="small" onClick={onClickLogin} sx={{ marginRight: 1 }}>
-        ログイン
-      </TextButton>
-      <OutLinedButton size="small" onClick={onClickSignUp}>
-        新規登録
-      </OutLinedButton>
-    </Box>
-  )
+  if (isLogin === false) {
+    return (
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar
+          position={isMobileSize ? 'static' : 'fixed'}
+          elevation={0}
+          sx={{
+            borderBottom: 1,
+            borderColor: 'secondary.main',
+            backgroundColor: 'background.default'
+          }}
+        >
+          <Container maxWidth="lg">
+            <Toolbar
+              disableGutters={isMobileSize}
+              sx={{ display: 'flex', justifyContent: 'space-between' }}
+            >
+              <Image
+                width={isMobileSize ? '126' : '140'}
+                height={isMobileSize ? '28.8' : '32'}
+                alt="icon"
+                src={AppLogo}
+              />
+              <Box>
+                <TextButton
+                  size="medium"
+                  onClick={onClickLogin}
+                  sx={{ marginRight: 1 }}
+                >
+                  ログイン
+                </TextButton>
+                <OutLinedButton size="medium" onClick={onClickSignUp}>
+                  新規登録
+                </OutLinedButton>
+              </Box>
+            </Toolbar>
+          </Container>
+        </AppBar>
+      </Box>
+    )
+  }
 
   return (
-    <AppBar
-      position="fixed"
-      elevation={0}
-      sx={{
-        borderBottom: 1,
-        borderColor: 'secondary.main',
-        backgroundColor: 'primary.light'
-      }}
-    >
-      <Grid
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{
+          borderBottom: 1,
+          borderColor: 'secondary.main',
+          backgroundColor: 'background.default'
+        }}
       >
-        <Toolbar
-          style={{ width: '100%' }}
-          disableGutters={isLogin && !isMobileSize}
-        >
-          {isLogin && isMobileSize && (
+        <Toolbar disableGutters={!isMobileSize}>
+          {isMobileSize && (
             <IconButton
               size="large"
               edge="start"
@@ -80,7 +88,6 @@ const Header = () => {
               <MenuIcon />
             </IconButton>
           )}
-
           <Box
             sx={{
               display: 'inline-flex',
@@ -95,10 +102,9 @@ const Header = () => {
               src={AppLogo}
             />
           </Box>
-          {isLogin === false && unregisteredUserMenu}
         </Toolbar>
-      </Grid>
-    </AppBar>
+      </AppBar>
+    </Box>
   )
 }
 
